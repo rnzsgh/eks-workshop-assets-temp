@@ -1,0 +1,26 @@
+[
+  {
+    "ParameterKey": "GitBranch",
+    "ParameterValue": "master"
+  },
+  {
+    "ParameterKey": "GitHubToken",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "GitHubUser",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "EksClusterName",
+    "ParameterValue": "eksworkshop-eksctl"
+  },
+  {
+    "ParameterKey": "GitSourceRepo",
+    "ParameterValue": "eks-workshop-sample-app-temp"
+  },
+  {
+    "ParameterKey": "GitSourceRepo",
+    "ParameterValue": "eks-workshop-sample-app-temp"
+  }
+]
