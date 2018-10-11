@@ -72,16 +72,10 @@ Resources:
               if event['RequestType'] == 'Create':
                 kubectl_role_name = event['ResourceProperties']['KubectlRoleName']
                 build_role_arn = event['ResourceProperties']['CodeBuildServiceRoleArn']
-                print(build_role_arn)
 
-                print('loading AssumeRolePolicyDocument')
                 assume = client.get_role(RoleName = kubectl_role_name)
-
-                print('extract assume policy doc')
-                print(assume['Role']['AssumeRolePolicyDocument'])
                 assume_doc = assume['Role']['AssumeRolePolicyDocument']
 
-                print('append to doc')
 
                 roles = [
                   {
@@ -97,9 +91,6 @@ Resources:
                       roles.append(statement)
 
                 assume_doc['Statement'] = roles
-                print(json.dumps(assume_doc))
-
-                print('update assuem role policy')
                 update_response = client.update_assume_role_policy(
                   RoleName = kubectl_role_name,
                   PolicyDocument = json.dumps(assume_doc),
@@ -112,11 +103,9 @@ Resources:
               response['Data'] = {"Message": "Resource creation failed"}
 
             response_body = json.dumps(response)
-
             headers = {'content-type': '', "content-length": len(response_body) }
 
             put_response = requests.put(event['ResponseURL'], headers=headers, data=response_body)
-            print('Response status code: %s' % put_response.status_code)
             return response
 
       Handler: index.handler
