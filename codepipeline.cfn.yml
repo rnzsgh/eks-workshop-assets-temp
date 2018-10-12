@@ -67,7 +67,6 @@ Resources:
             }
 
             client = boto3.client('iam')
-
             try:
               if event['RequestType'] == 'Create':
                 kubectl_role_name = event['ResourceProperties']['KubectlRoleName']
@@ -75,15 +74,7 @@ Resources:
 
                 assume = client.get_role(RoleName = kubectl_role_name)
                 assume_doc = assume['Role']['AssumeRolePolicyDocument']
-
-
-                roles = [
-                  {
-                    'Effect': 'Allow',
-                    'Principal': { 'AWS': build_role_arn },
-                    'Action': 'sts:AssumeRole',
-                  }
-                ]
+                roles = [ { 'Effect': 'Allow', 'Principal': { 'AWS': build_role_arn }, 'Action': 'sts:AssumeRole' } ]
 
                 for statement in assume_doc['Statement']:
                   if 'AWS' in statement['Principal']:
@@ -91,11 +82,7 @@ Resources:
                       roles.append(statement)
 
                 assume_doc['Statement'] = roles
-                update_response = client.update_assume_role_policy(
-                  RoleName = kubectl_role_name,
-                  PolicyDocument = json.dumps(assume_doc),
-                )
-                print('done')
+                update_response = client.update_assume_role_policy(RoleName = kubectl_role_name, PolicyDocument = json.dumps(assume_doc))
             except Exception as e:
               print(e)
               response['Status'] = 'FAILED'
@@ -104,7 +91,6 @@ Resources:
 
             response_body = json.dumps(response)
             headers = {'content-type': '', "content-length": len(response_body) }
-
             put_response = requests.put(event['ResponseURL'], headers=headers, data=response_body)
             return response
 
